@@ -1,3 +1,4 @@
+var http = require('http');
 var callApi = function(path, callback) {
   var options = {
     host: 'api.icndb.com',
@@ -28,31 +29,39 @@ var getJoke = function() {
 };
 
 
-
-
-var http = require('http')
 var irc = require('irc');
-var config = require('./config.js');
 
-function Chuckie() {
-  this.client = new irc.Client(config.server, config.userName, config);
+function Chuckie(config) {
+  this.config = config;
+  this.client = new irc.Client(this.config.server, this.config.userName, this.config);
 }
 
 Chuckie.prototype.addListeners = function() {
+  var chuckie = this;
   this.client.addListener('message', function(from, to, text, message) {
-    var regex = new RegExp('^' + config.userName + '[,:\s\\|].*$', 'i');
+    var regex = new RegExp('^' + chuckie.config.userName + '[,:\s\\|].*$', 'i');
 
-    if ( to === config.userName || text.match(regex) ) {
-      callApi('/jokes/random', function(client, joke) {
-        client.say(joke.value.joke);
-      });
+    if ( to === chuckie.config.userName || text.match(regex) ) {
+      chuckie.client.say(message.args[0], 'something funny here');
     } 
   });
-};
+}
 
 Chuckie.prototype.start = function() {
+  var chuckie = this;
   console.log('Connecting to IRC...');
-  this.addListeners();
-};
+  try {
+    chuckie.client.connect(10);
+    console.log('Succesfully connected!');
+    chuckie.addListeners();
+    console.log('Succesfully added listeners');
+  } catch (ex) {
+    console.log('Some error occured while connecting:');
+    console.log(ex);
+    console.log('-------------------------------------');
+    console.log('Retry in 5 seconds');
+    setTimeout(function() { this.start() }, 2000);
+  }
+}
 
 exports.Chuckie = Chuckie;
