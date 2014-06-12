@@ -26,7 +26,7 @@ ChuckApi.prototype = {
         });
         
         res.on('end', function() {
-          cb(JSON.parse(result).value.joke);
+          cb(JSON.parse(result).value.joke.replace("&quot;", "\""));
         });
       }
 
