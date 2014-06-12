@@ -25,7 +25,7 @@ Chuckie.prototype = {
       console.log(ex);
       console.log('-------------------------------------');
       console.log('Retry in 5 seconds');
-      setTimeout(function() { this.start() }, 2000);
+      setTimeout(function() { this.start() }, 5000);
     }
   },
 
@@ -34,10 +34,12 @@ Chuckie.prototype = {
 
     this.client.addListener('message', function(from, to, text, message) {
       var regex = new RegExp('^' + chuckie.config.userName + '[,:\s\\|].*$', 'i');
+      var pm = to === chuckie.config.userName;
+      var responseTo = pm ? from : message.args[0];
 
-      if ( to === chuckie.config.userName || text.match(regex) ) {
-        chuckie.chuckApi.callApi(function(response) {
-          chuckie.client.say(message.args[0], response);
+      if ( pm || text.match(regex) ) {
+        chuckie.chuckApi.callApi(from, function(response) {
+          chuckie.client.say(responseTo, response);
         });
       } 
     });
