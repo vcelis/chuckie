@@ -13,12 +13,12 @@
 <p>Adjust configuration in <code>config.js</code></p>
 
 <h2>Quick start</h2>
-´´´
+<pre>
 git clone https://github.com/vcelis/chuckie
 cd chuckie
 npm install irc
 nodejs bot.js
-´´´
+</pre>
 
 <h2>License</h2>
 <p>The MIT License (MIT)</p>
