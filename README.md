@@ -1,3 +1,5 @@
+<pre>v0.1</pre>
+
 <h1>chuckie</h1>
 <p>A nodeJS Chuck Norris IRC bot</p>
 
