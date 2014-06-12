@@ -29,7 +29,7 @@ ChuckApi.prototype = {
         });
         
         res.on('end', function() {
-          cb(JSON.parse(result).value.joke.replace("&quot;", "\"").replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">"));
+          cb(JSON.parse(result).value.joke.replace(/&quot;/g, "\"").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">"));
         });
       }
 
