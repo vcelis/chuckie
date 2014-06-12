@@ -10,8 +10,11 @@ function ChuckApi(config) {
 }
 
 ChuckApi.prototype = {
-  callApi: function(cb) {
+  callApi: function(from, cb) {
     var chuckApi = this;
+
+    chuckApi.config.path += '?firstName=Shibe&lastName=' + from;
+    console.log(chuckApi.config.path);
 
     http.request(chuckApi.config, function(res) {
       var code = res.statusCode;
