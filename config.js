@@ -1,5 +1,5 @@
 var config = {
-  userName: 'Chuckie',
+  userName: 'ChuckieDev',
   realName: 'nodeJS Chuck Norris IRC bot',
   server: 'irc.freenode.net',
   port: 6667,
@@ -18,8 +18,10 @@ var config = {
   messageSplit: 512,
   retryCount: 10,
 
-  apiHostname: 'api.icndb.com',
-  apiPort: 80,
+  chuckApiHostname: 'api.icndb.com',
+  apiApiPort: 80,
+  geoApiHostname: 'ip-api.com/json/',
+  geoApiPort: 80
 };
 
 exports.config = config;

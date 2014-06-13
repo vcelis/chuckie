@@ -1,13 +1,16 @@
 var irc = require('irc');
-var chuckApi = require('./chuckApi.js');
+
+var chuckApi = require('./services/chuckApi.js');
+var geoApi = require('./services/geoApi.js');
+var weatherApi = require('./services/weatherApi.js');
+
+Chuckie.QUESTIONS = ['Yes', 'No', 'Maybe', 'Yeap', '?', 'How should I know?'];
 
 function Chuckie(config) {
   this.config = config;
   this.client = new irc.Client(this.config.server, this.config.userName, this.config);
   this.chuckApi = new chuckApi.ChuckApi(config);
 }
-
-
 
 Chuckie.prototype = {
 
@@ -29,6 +32,25 @@ Chuckie.prototype = {
     }
   },
 
+  evalMessage: function(from, to, text, message, responseTo) {
+    var chuckie = this;
+
+    if (text.match(/.*joke.*/)) {
+      chuckie.chuckApi.call(from, function(response) {
+        chuckie.client.say(responseTo, response);
+      });
+    } else if (text.match(/^.*location.*$/)) {
+      chuckie.client.say(responseTo, 'LOCATION');
+    } else if (text.match(/^.*weather.*$/)) {
+      chuckie.client.say(responseTo, 'WEATHER');
+    } else if (text.match(/^.*\?$/)) {
+      var i = Math.floor((Math.random() * Chuckie.QUESTIONS.length));
+      chuckie.client.say(responseTo, Chuckie.QUESTIONS[i]);
+    } else {
+      chuckie.client.say(responseTo, 'I don\'t understand');
+    }
+  },
+
   addListeners: function() {
     var chuckie = this;
 
@@ -38,9 +60,12 @@ Chuckie.prototype = {
       var responseTo = pm ? from : message.args[0];
 
       if ( pm || text.match(regex) ) {
+        chuckie.evalMessage(from, to, text, message, responseTo);
+        /*
         chuckie.chuckApi.callApi(from, function(response) {
           chuckie.client.say(responseTo, response);
         });
+        */
       } 
     });
   }
